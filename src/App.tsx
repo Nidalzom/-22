@@ -10,7 +10,7 @@ function gregorianToJDN(y: number, m: number, d: number) {
 }
 
 function jdnToGregorian(jdn: number) {
-  const n = jdn + 32044;
+  const n = Math.floor(jdn) + 32044;
   const g = Math.floor((4 * n + 3) / 146097);
   const dg = n - Math.floor(146097 * g / 4);
   const c = Math.floor((4 * dg + 3) / 1461);
@@ -18,7 +18,7 @@ function jdnToGregorian(jdn: number) {
   const b = Math.floor((5 * dc + 2) / 153);
   const day = dc - Math.floor((153 * b + 2) / 5) + 1;
   const month = b + 3 - 12 * Math.floor(b / 10);
-  return { year: 100 * g + c - 4800 + Math.floor(b / 10), month, day };
+  return { year: 100 * g + c - 4800 + Math.floor(b / 10), month: Math.floor(month), day: Math.floor(day) };
 }
 
 function isHijriLeap(year: number) {
@@ -52,7 +52,7 @@ function gregorianToHijri(y: number, m: number, d: number) {
             Math.floor(nl / 16) * Math.floor(15238 * nl / 43) + 29;
   const month = Math.floor(24 * U / 709);
   const day = U - Math.floor(709 * month / 24);
-  return { year: 30 * n + nl - 30, month, day };
+  return { year: Math.floor(30 * n + nl - 30), month: Math.floor(month), day: Math.floor(day) };
 }
 
 function gregorianMonthDays(year: number, month: number) {
@@ -356,7 +356,7 @@ function DateButton({ value, onClick, error, isHijri }: any) {
   
   // نعرض التاريخ بالشكل الصحيح والكامل: 12 أكتوبر 2024
   const label = value.year && value.month && value.day
-    ? `${value.day} ${monthsArr[Number(value.month) - 1]} ${value.year}`
+    ? `${Math.floor(Number(value.day))} ${monthsArr[Number(value.month) - 1]} ${Math.floor(Number(value.year))}`
     : 'اختر تاريخاً';
 
   return (
@@ -413,7 +413,7 @@ export default function App() {
     let hasError = false;
     let hijriResult = null, gregorianResult = null, studyResult = null;
 
-    const hD = Number(hijriDob.day), hM = Number(hijriDob.month), hY = Number(hijriDob.year);
+    const hD = Math.floor(Number(hijriDob.day)), hM = Math.floor(Number(hijriDob.month)), hY = Math.floor(Number(hijriDob.year));
 
     if (hD || hM || hY) {
       if (isValidDate(hD, hM, hY, true)) {
@@ -433,7 +433,7 @@ export default function App() {
       }
     }
 
-    const sD = Number(studyDate.day), sM = Number(studyDate.month), sY = Number(studyDate.year);
+    const sD = Math.floor(Number(studyDate.day)), sM = Math.floor(Number(studyDate.month)), sY = Math.floor(Number(studyDate.year));
 
     if (sD || sM || sY) {
       if (!isValidDate(hD, hM, hY, true)) {
